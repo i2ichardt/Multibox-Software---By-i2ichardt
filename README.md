@@ -4,7 +4,8 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software I made to Multibox on World of Warcraft Private Servers.<br>
   It isn't locked in to WOW only so i'm sure there could be other uses for it.<br>
   <br>
-  Currently only setup to handle two clients; could be easily change to work with more.<br>
+  Currently only setup to handle two clients; A Main window you play on, and a window to copy the inputs too.<br>
+  This could be easily change to work with more.<br>
   </p>
   <br>
   <h1>Main interface:</h1>
