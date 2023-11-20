@@ -1,0 +1,19 @@
+C:\Users\click\source\repos\WoWMultiClientTool\bin\Debug\net6.0-windows\Multibox Software.exe
+C:\Users\click\source\repos\WoWMultiClientTool\bin\Debug\net6.0-windows\Multibox Software.deps.json
+C:\Users\click\source\repos\WoWMultiClientTool\bin\Debug\net6.0-windows\Multibox Software.runtimeconfig.json
+C:\Users\click\source\repos\WoWMultiClientTool\bin\Debug\net6.0-windows\Multibox Software.dll
+C:\Users\click\source\repos\WoWMultiClientTool\bin\Debug\net6.0-windows\Multibox Software.pdb
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.vbproj.AssemblyReference.cache
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox_Software.Form1.resources
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox_Software.Resources.resources
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox_Software.Settings.resources
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.vbproj.GenerateResource.cache
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.AssemblyInfoInputs.cache
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.AssemblyInfo.vb
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.vbproj.CoreCompileInputs.cache
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.dll
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\refint\Multibox Software.dll
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.pdb
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\Multibox Software.genruntimeconfig.cache
+C:\Users\click\source\repos\WoWMultiClientTool\obj\Debug\net6.0-windows\ref\Multibox Software.dll
