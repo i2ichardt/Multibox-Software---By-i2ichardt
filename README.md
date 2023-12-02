@@ -1,41 +1,58 @@
-# Multibox-Software---By-i2ichardt
-<p align="center">
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Software I made to Multibox on World of Warcraft Private Servers.<br>
-  It isn't locked in to WOW only so i'm sure there could be other uses for it.<br>
-  <br>
-  Currently only setup to handle two clients; A Main window you play on, and a window to copy the inputs too.<br>
-  This could be easily change to work with more.<br>
-  </p>
-  <br>
-  <h1>Main interface:</h1>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is what the program looks like right after you load the program.<br>
-  At this point you still need to select a target window from the available targets to copy and send the inputs.<br>
-  If the window you want to target isn't in the list already then click the "REFRESH LIST" button and click on the<br>
-  window in the list.
-  </p>
-  <img src="/Image/Image1.png">
-  <br>
-  <h1>Main interface: With a Target Selected</h1>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is what the program looks like after you select a target window.<br>
-  The target window is the window that you want to copy your inputs too; so not the main window you<br>
-  will be playing on.
-  </p>
-  <img src="/Image/Image2.png">
-  <br>
-  <h1>Settings interface:</h1>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is the settings interface. When using this software to multibox on WOW<br>
-  I would put the secondary character on FOLLOW too the main character i was playing. If you send Q,W,A,S,D,or E<br>
-  to the secondary character it would cancel them following the main toon. So I added these settings to stop<br>
-  sending those inputs to the secondary character.<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note that I'm not currently saving the 'Settings'; so the next time you run the<br>
-  software you will have to exclude the keys again.
-  </p>
-  <img src="/Image/Image3.png">
-  <br>
-  <h1>Main interface: With a Target Selected, Some Inputs sent to window</h1>
-  <img src="/Image/Image4.png">
-</p>
+# Multibox Software by i2ichardt
+
+
+## Overview
+
+Multibox Software is a versatile tool designed for multiboxing on World of Warcraft Private Servers. While its primary focus is on WoW, the software can be adapted for various use cases. Currently configured for dual-client setup, the main window is used for gameplay, while a secondary window receives replicated inputs. The software can be easily modified to support additional clients.
+
+## Features
+
+- **Intuitive Main Interface:**
+  - The program's main interface provides a user-friendly experience upon loading.
+  - Select a target window from the available list to copy and send inputs.
+  - Use the "REFRESH LIST" button to update the list of available target windows.
+
+  ![Main Interface](/Image/Image1.png)
+
+- **Main Interface with Target Selected:**
+  - After selecting a target window, the interface adjusts to reflect the chosen target.
+  - The target window is where inputs will be replicated, separate from the main gameplay window.
+
+  ![Main Interface with Target Selected](/Image/Image2.png)
+
+- **Settings Interface:**
+  - The settings interface allows customization for optimal multiboxing on WoW.
+  - Specifically designed for WoW multiboxing, it includes options to prevent sending specific inputs (Q, W, A, S, D, or E) to the secondary character.
+  - Note: Settings are not currently saved between sessions, requiring reconfiguration upon each software run.
+
+  ![Settings Interface](/Image/Image3.png)
+
+- **Main Interface with Target Selected, Some Inputs Sent to Window:**
+
+  ![Main Interface with Target Selected, Some Inputs Sent to Window](/Image/Image4.png)
+
+## How to Use
+
+1. **Load the Program:**
+   - Launch the software and observe the main interface.
+
+2. **Select Target Window:**
+   - Choose a target window from the list or refresh the list using the "REFRESH LIST" button.
+
+3. **Configure Settings:**
+   - Access the settings interface to customize inputs and ensure smooth multiboxing.
+
+4. **Enjoy Multiboxing:**
+   - Play on the main window while inputs are replicated to the designated target window.
+
+## Disclaimer
+
+This software is intended for personal use and educational purposes only. Use it responsibly and comply with the terms of service of the respective applications or games.
+
+## Contributions and Issues
+
+Contributions are welcome! If you encounter any issues or have suggestions for improvements, please [submit an issue](https://github.com/i2ichardt/Multibox-Software/issues).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
