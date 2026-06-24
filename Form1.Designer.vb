@@ -23,7 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
-        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         LblTargetWindowTitle = New Label()
         FlowLayoutPanel1 = New FlowLayoutPanel()
         Pnl_Info = New Panel()
@@ -42,7 +42,13 @@ Partial Class Form1
         Btn_Settings = New Button()
         LblKeyPressed = New Label()
         Label1 = New Label()
+        ChkBox_OnTop = New CheckBox()
+        TrackBar_Opacity = New TrackBar()
+        ChkBox_HoverFocus = New CheckBox()
+        Label7 = New Label()
+        Btn_ActionBar = New Button()
         Pnl_Info.SuspendLayout()
+        CType(TrackBar_Opacity, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' LblTargetWindowTitle
@@ -141,7 +147,7 @@ Partial Class Form1
         Label3.Font = New Font("Segoe UI", 8.25F, FontStyle.Underline, GraphicsUnit.Point)
         Label3.Location = New Point(12, 31)
         Label3.Name = "Label3"
-        Label3.Size = New Size(79, 13)
+        Label3.Size = New Size(78, 13)
         Label3.TabIndex = 6
         Label3.Text = "Window Title:"
         ' 
@@ -239,11 +245,64 @@ Partial Class Form1
         Label1.Text = "Key Pressed:"
         Label1.TextAlign = ContentAlignment.MiddleCenter
         ' 
+        ' ChkBox_OnTop
+        ' 
+        ChkBox_OnTop.AutoSize = True
+        ChkBox_OnTop.Location = New Point(603, 47)
+        ChkBox_OnTop.Name = "ChkBox_OnTop"
+        ChkBox_OnTop.Size = New Size(103, 19)
+        ChkBox_OnTop.TabIndex = 18
+        ChkBox_OnTop.Text = "Always on Top"
+        ChkBox_OnTop.UseVisualStyleBackColor = True
+        ' 
+        ' TrackBar_Opacity
+        ' 
+        TrackBar_Opacity.Location = New Point(603, 139)
+        TrackBar_Opacity.Maximum = 255
+        TrackBar_Opacity.Minimum = 30
+        TrackBar_Opacity.Name = "TrackBar_Opacity"
+        TrackBar_Opacity.Size = New Size(104, 45)
+        TrackBar_Opacity.TabIndex = 19
+        TrackBar_Opacity.Value = 255
+        ' 
+        ' ChkBox_HoverFocus
+        ' 
+        ChkBox_HoverFocus.AutoSize = True
+        ChkBox_HoverFocus.Location = New Point(603, 72)
+        ChkBox_HoverFocus.Name = "ChkBox_HoverFocus"
+        ChkBox_HoverFocus.Size = New Size(86, 19)
+        ChkBox_HoverFocus.TabIndex = 20
+        ChkBox_HoverFocus.Text = "Auto Focus"
+        ChkBox_HoverFocus.UseVisualStyleBackColor = True
+        ' 
+        ' Label7
+        ' 
+        Label7.AutoSize = True
+        Label7.Location = New Point(603, 122)
+        Label7.Name = "Label7"
+        Label7.Size = New Size(77, 15)
+        Label7.TabIndex = 21
+        Label7.Text = "Transparency"
+        ' 
+        ' Btn_ActionBar
+        ' 
+        Btn_ActionBar.Location = New Point(631, 252)
+        Btn_ActionBar.Name = "Btn_ActionBar"
+        Btn_ActionBar.Size = New Size(75, 23)
+        Btn_ActionBar.TabIndex = 22
+        Btn_ActionBar.Text = "Action Bar"
+        Btn_ActionBar.UseVisualStyleBackColor = True
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(564, 293)
+        ClientSize = New Size(743, 293)
+        Controls.Add(Btn_ActionBar)
+        Controls.Add(Label7)
+        Controls.Add(ChkBox_HoverFocus)
+        Controls.Add(TrackBar_Opacity)
+        Controls.Add(ChkBox_OnTop)
         Controls.Add(LblKeyPressed)
         Controls.Add(Label1)
         Controls.Add(Btn_Settings)
@@ -259,6 +318,7 @@ Partial Class Form1
         Text = "Multibox Software - By i2ichardt"
         Pnl_Info.ResumeLayout(False)
         Pnl_Info.PerformLayout()
+        CType(TrackBar_Opacity, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -280,4 +340,9 @@ Partial Class Form1
     Friend WithEvents Btn_Settings As Button
     Friend WithEvents LblKeyPressed As Label
     Friend WithEvents Label1 As Label
+    Friend WithEvents ChkBox_OnTop As CheckBox
+    Friend WithEvents TrackBar_Opacity As TrackBar
+    Friend WithEvents ChkBox_HoverFocus As CheckBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents Btn_ActionBar As Button
 End Class

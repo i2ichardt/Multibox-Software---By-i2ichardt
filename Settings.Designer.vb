@@ -122,6 +122,11 @@ Partial Class Settings
         Btn_Subtract = New Button()
         Btn_Multiply = New Button()
         Btn_Divide = New Button()
+        Cmb_Presets = New ComboBox()
+        Label3 = New Label()
+        Btn_DeletePreset = New Button()
+        Btn_SavePreset = New Button()
+        Btn_Reset = New Button()
         SuspendLayout()
         ' 
         ' Label1
@@ -1323,11 +1328,72 @@ Partial Class Settings
         Btn_Divide.Text = "/"
         Btn_Divide.UseVisualStyleBackColor = True
         ' 
+        ' Cmb_Presets
+        ' 
+        Cmb_Presets.FormattingEnabled = True
+        Cmb_Presets.Location = New Point(973, 27)
+        Cmb_Presets.Name = "Cmb_Presets"
+        Cmb_Presets.Size = New Size(121, 23)
+        Cmb_Presets.TabIndex = 104
+        ' 
+        ' Label3
+        ' 
+        Label3.AutoSize = True
+        Label3.Location = New Point(971, 9)
+        Label3.Name = "Label3"
+        Label3.Size = New Size(47, 15)
+        Label3.TabIndex = 105
+        Label3.Text = "Presets:"
+        ' 
+        ' Btn_DeletePreset
+        ' 
+        Btn_DeletePreset.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        Btn_DeletePreset.ForeColor = Color.Red
+        Btn_DeletePreset.Location = New Point(1097, 27)
+        Btn_DeletePreset.Name = "Btn_DeletePreset"
+        Btn_DeletePreset.Size = New Size(24, 23)
+        Btn_DeletePreset.TabIndex = 106
+        Btn_DeletePreset.TabStop = False
+        Btn_DeletePreset.Tag = "False"
+        Btn_DeletePreset.Text = "x"
+        Btn_DeletePreset.UseVisualStyleBackColor = True
+        ' 
+        ' Btn_SavePreset
+        ' 
+        Btn_SavePreset.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        Btn_SavePreset.ForeColor = Color.Black
+        Btn_SavePreset.Location = New Point(1121, 27)
+        Btn_SavePreset.Name = "Btn_SavePreset"
+        Btn_SavePreset.Size = New Size(24, 23)
+        Btn_SavePreset.TabIndex = 107
+        Btn_SavePreset.TabStop = False
+        Btn_SavePreset.Tag = "False"
+        Btn_SavePreset.Text = "+"
+        Btn_SavePreset.UseVisualStyleBackColor = True
+        ' 
+        ' Btn_Reset
+        ' 
+        Btn_Reset.FlatAppearance.BorderSize = 0
+        Btn_Reset.FlatAppearance.MouseOverBackColor = Color.White
+        Btn_Reset.FlatStyle = FlatStyle.Flat
+        Btn_Reset.ForeColor = SystemColors.Highlight
+        Btn_Reset.Location = New Point(1049, 56)
+        Btn_Reset.Name = "Btn_Reset"
+        Btn_Reset.Size = New Size(96, 23)
+        Btn_Reset.TabIndex = 109
+        Btn_Reset.Text = "Reset All Keys"
+        Btn_Reset.UseVisualStyleBackColor = True
+        ' 
         ' Settings
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1192, 367)
+        Controls.Add(Btn_Reset)
+        Controls.Add(Btn_SavePreset)
+        Controls.Add(Btn_DeletePreset)
+        Controls.Add(Label3)
+        Controls.Add(Cmb_Presets)
         Controls.Add(Btn_Multiply)
         Controls.Add(Btn_Divide)
         Controls.Add(Btn_Subtract)
@@ -1534,4 +1600,9 @@ Partial Class Settings
     Friend WithEvents Btn_Subtract As Button
     Friend WithEvents Btn_Multiply As Button
     Friend WithEvents Btn_Divide As Button
+    Friend WithEvents Cmb_Presets As ComboBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Btn_DeletePreset As Button
+    Friend WithEvents Btn_SavePreset As Button
+    Friend WithEvents Btn_Reset As Button
 End Class

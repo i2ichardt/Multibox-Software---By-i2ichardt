@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "J7TBzSFc1A57DX2cOqRSdKHmQLg0JMLpvoHBxLBn2xcmXLwGkTixsebFemSjdpmAwFuht/DRCOiLMNP0CfskEA==",
+  "dgSpecHash": "0pMudOplFE0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\click\\source\\repos\\WoWMultiClientTool\\Multibox Software.vbproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\i2ich\\Downloads\\Multibox-Software---By-i2ichardt-main\\Multibox-Software---By-i2ichardt-main\\Multibox Software.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\i2ich\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512"
+  ],
   "logs": []
 }

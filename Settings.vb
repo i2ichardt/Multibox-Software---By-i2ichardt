@@ -1,8 +1,50 @@
 ﻿Imports System.Runtime.InteropServices
+Imports System.IO ' Required for File reading/writing
+Imports System.Windows.Forms ' Required for Application.StartupPath
 
 Public Module SharedVariables
-    'If you want to keep ExcludedInputs accessible even after the form is closed, you should declare it in a module or in a class outside of the form’s class.
     Public ExcludedInputs As New List(Of String)
+    Public Presets As New Dictionary(Of String, List(Of String))
+
+    ' Define where the file will be saved (in the same folder as your .exe)
+    Public PresetsFilePath As String = Path.Combine(Application.StartupPath, "presets.txt")
+
+    ' --- NEW: Save presets to a text file ---
+    Public Sub SavePresetsToFile()
+        Dim lines As New List(Of String)
+
+        For Each kvp In Presets
+            ' Format will be "PresetName:Key1,Key2,Key3"
+            Dim keys As String = String.Join(",", kvp.Value)
+            lines.Add(kvp.Key & ":" & keys)
+        Next
+
+        File.WriteAllLines(PresetsFilePath, lines)
+    End Sub
+
+    ' --- NEW: Load presets from the text file ---
+    Public Sub LoadPresetsFromFile()
+        Presets.Clear()
+
+        If File.Exists(PresetsFilePath) Then
+            Dim lines() As String = File.ReadAllLines(PresetsFilePath)
+
+            For Each line In lines
+                Dim parts() As String = line.Split(":"c)
+
+                If parts.Length = 2 Then
+                    Dim presetName As String = parts(0)
+                    Dim keys() As String = parts(1).Split(","c)
+
+                    Dim keyList As New List(Of String)(keys)
+                    ' Clean up any empty entries just in case
+                    keyList.RemoveAll(Function(s) String.IsNullOrWhiteSpace(s))
+
+                    Presets.Add(presetName, keyList)
+                End If
+            Next
+        End If
+    End Sub
 End Module
 
 Public Class Settings
@@ -31,20 +73,19 @@ Public Class Settings
     End Function
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' 1. Load the presets from the text file into memory
+        LoadPresetsFromFile()
 
+        ' 2. Populate the ComboBox with the saved preset names
+        Cmb_Presets.Items.Clear()
+        For Each presetName In Presets.Keys
+            Cmb_Presets.Items.Add(presetName)
+        Next
+
+        ' 3. Visually update buttons if there are active exclusions
         If ExcludedInputs.Count > 0 Then
-            For i = 0 To ExcludedInputs.Count - 1
-
-                Dim buttonName As String = "Btn_" & ExcludedInputs.Item(i)
-                Dim button As Button = TryCast(Me.Controls(buttonName), Button)
-                If button IsNot Nothing Then
-                    button.PerformClick()
-                End If
-
-            Next
-
+            ApplyExcludedInputsToButtons()
         End If
-
     End Sub
 
     Private Sub ButtonStyling_Toggle(Button As Button)
@@ -561,5 +602,143 @@ Public Class Settings
         ButtonStyling_Toggle(sender)
     End Sub
 
+    Private Sub Btn_ShiftKey2_Click(sender As Object, e As EventArgs) Handles Btn_ShiftKey2.Click
+        Input_Key = "ShiftKey"
+        ButtonStyling_Toggle(sender)
 
+        'Toggle other Shiftkey also, Can't distinguish between them using the method im using to send inputs to window
+        ButtonStyling_Toggle(Btn_ShiftKey)
+    End Sub
+
+    Private Sub Btn_Menu2_Click(sender As Object, e As EventArgs) Handles Btn_Menu2.Click
+        Input_Key = "Menu"
+        ButtonStyling_Toggle(sender)
+
+        'Toggle Other Alt key also, Can't distinguish between them using the method im using to send inputs to window
+        ButtonStyling_Toggle(Btn_Menu)
+    End Sub
+
+    Private Sub Btn_ControlKey2_Click(sender As Object, e As EventArgs) Handles Btn_ControlKey2.Click
+        Input_Key = "ControlKey"
+        ButtonStyling_Toggle(sender)
+
+        'Toggle Other Ctrl key also, Can't distinguish between them using the method im using to send inputs to window
+        ButtonStyling_Toggle(Btn_ControlKey)
+    End Sub
+
+    ' ==========================================
+    ' PRESET MANAGEMENT SYSTEM
+    ' ==========================================
+
+    Private Sub Btn_SavePreset_Click(sender As Object, e As EventArgs) Handles Btn_SavePreset.Click
+        Dim presetName As String = Cmb_Presets.Text.Trim()
+
+        If String.IsNullOrWhiteSpace(presetName) Then
+            MessageBox.Show("Please enter or select a name for the preset.")
+            Return
+        End If
+
+        ' Save to Dictionary
+        Presets(presetName) = New List(Of String)(ExcludedInputs)
+
+        ' Update ComboBox
+        If Not Cmb_Presets.Items.Contains(presetName) Then
+            Cmb_Presets.Items.Add(presetName)
+        End If
+
+        ' --- NEW: Save the updated dictionary to the file ---
+        SavePresetsToFile()
+
+        MessageBox.Show($"Preset '{presetName}' saved successfully!")
+    End Sub
+
+    Private Sub Btn_DeletePreset_Click(sender As Object, e As EventArgs) Handles Btn_DeletePreset.Click
+        Dim presetName As String = Cmb_Presets.Text.Trim()
+
+        If Presets.ContainsKey(presetName) Then
+            ' Remove from Dictionary and ComboBox
+            Presets.Remove(presetName)
+            Cmb_Presets.Items.Remove(presetName)
+            Cmb_Presets.Text = ""
+
+            ' --- NEW: Save the updated dictionary to the file ---
+            SavePresetsToFile()
+
+            MessageBox.Show($"Preset '{presetName}' has been deleted.")
+        Else
+            MessageBox.Show("Preset not found.")
+        End If
+    End Sub
+
+    ' 3. LOAD PRESET (Triggers when you pick an item from the ComboBox)
+    Private Sub Cmb_Presets_SelectedIndexChanged(sender As Object, e As EventArgs) Handles Cmb_Presets.SelectedIndexChanged
+        Dim presetName As String = Cmb_Presets.SelectedItem.ToString()
+
+        If Presets.ContainsKey(presetName) Then
+            ' Clear the active list
+            ExcludedInputs.Clear()
+
+            ' Reset all button colors to default
+            ResetAllButtonVisuals()
+
+            ' Load the saved keys back into the active list
+            ExcludedInputs.AddRange(Presets(presetName))
+
+            ' Apply the red styling to the newly loaded keys
+            ApplyExcludedInputsToButtons()
+        End If
+    End Sub
+
+    ' ==========================================
+    ' HELPER METHODS FOR VISUAL UPDATES
+    ' ==========================================
+
+    ' Resets all key buttons back to white/unselected
+    Private Sub ResetAllButtonVisuals()
+        For Each ctrl As Control In Me.Controls
+            ' Find all buttons that start with "Btn_" (excluding our new preset buttons)
+            If TypeOf ctrl Is Button AndAlso ctrl.Name.StartsWith("Btn_") AndAlso
+               ctrl.Name <> "Btn_SavePreset" AndAlso ctrl.Name <> "Btn_DeletePreset" AndAlso ctrl.Name <> "Btn_Reset" Then
+
+                Dim btn As Button = DirectCast(ctrl, Button)
+                btn.ForeColor = Color.Black
+                btn.BackColor = SystemColors.ControlLightLight
+                btn.Tag = "False"
+            End If
+        Next
+    End Sub
+
+    ' Applies the red formatting to buttons based on the current ExcludedInputs list
+    Private Sub ApplyExcludedInputsToButtons()
+        For Each key In ExcludedInputs
+            Dim buttonName As String = "Btn_" & key
+            Dim button As Button = TryCast(Me.Controls(buttonName), Button)
+
+            If button IsNot Nothing Then
+                button.ForeColor = Color.White
+                button.BackColor = Color.Red
+                button.Tag = "True"
+            End If
+
+            If key = "ShiftKey" Or key = "ControlKey" Or key = "Menu" Or key = "Return" Then
+                Dim buttonName2 As String = "Btn_" & key & "2"
+                Dim button2 As Button = TryCast(Me.Controls(buttonName2), Button)
+
+                If button2 IsNot Nothing Then
+                    button2.ForeColor = Color.White
+                    button2.BackColor = Color.Red
+                    button2.Tag = "True"
+                End If
+
+            End If
+
+
+
+        Next
+    End Sub
+
+    Private Sub Btn_Reset_Click(sender As Object, e As EventArgs) Handles Btn_Reset.Click
+        Cmb_Presets.Text = ""
+        ResetAllButtonVisuals()
+    End Sub
 End Class

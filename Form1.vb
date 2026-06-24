@@ -6,7 +6,20 @@ Imports System.Security.Principal
 Imports System.Text
 Imports System.Windows.Forms
 
+
 Public Class Form1
+    '' Start - Window Position API stuff
+    <DllImport("user32.dll", SetLastError:=True)>
+    Private Shared Function SetWindowPos(ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+    End Function
+
+    Private Shared ReadOnly HWND_TOPMOST As New IntPtr(-1)
+    Private Shared ReadOnly HWND_NOTOPMOST As New IntPtr(-2)
+    Private Const SWP_NOMOVE As UInteger = &H2
+    Private Const SWP_NOSIZE As UInteger = &H1
+    Private Const SWP_SHOWWINDOW As UInteger = &H40
+    '' END - Window Position API stuff
+
     Public TargetWindow_Hwnd As IntPtr
 
     ''start - get process information
@@ -14,7 +27,62 @@ Public Class Form1
     Public selectedWindowTitle As String
     Public selectedHWnd As IntPtr
     Public selectedIcon As Icon
+    ' Background timer to manage the Hover-to-Focus feature dynamically
+    Private WithEvents Tm_HoverFocus As New Timer()
 
+    '' Start - Windows API DLL Imports
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Private Shared Function FindWindow(
+       ByVal lpClassName As String,
+       ByVal lpWindowName As String) As IntPtr
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function SendMessage(hWnd As IntPtr, Msg As UInteger, wParam As Integer, lParam As Integer) As Integer
+    End Function
+
+
+
+    <DllImport("user32.dll", SetLastError:=True)>
+    Private Shared Function GetWindowLong(ByVal hWnd As IntPtr, ByVal nIndex As Integer) As Integer
+    End Function
+
+    <DllImport("user32.dll", SetLastError:=True)>
+    Private Shared Function SetWindowLong(ByVal hWnd As IntPtr, ByVal nIndex As Integer, ByVal dwNewLong As Integer) As Integer
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function SetLayeredWindowAttributes(ByVal hWnd As IntPtr, ByVal crKey As UInteger, ByVal bAlpha As Byte, ByVal dwFlags As UInteger) As Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function GetCursorPos(ByRef lpPoint As Point) As Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function WindowFromPoint(ByVal point As Point) As IntPtr
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function GetForegroundWindow() As IntPtr
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function SetForegroundWindow(ByVal hWnd As IntPtr) As Boolean
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Shared Function GetAncestor(ByVal hWnd As IntPtr, ByVal gaFlags As UInteger) As IntPtr
+    End Function
+    '' End - Windows API DLL Imports
+    '' Windows API Constants
+
+
+    Private Const GWL_EXSTYLE As Integer = -20
+    Private Const WS_EX_LAYERED As Integer = &H80000
+    Private Const LWA_ALPHA As Integer = &H2
+
+    Private Const GA_ROOT As UInteger = 2
 
     Private Sub Processes_Load()
         Dim missedProcesses As Integer = 0
@@ -107,6 +175,9 @@ Public Class Form1
 
 
     End Sub
+
+
+
     Private Sub pnl_Paint(sender As Object, e As PaintEventArgs)
         Dim pnl As Panel = CType(sender, Panel)
         ControlPaint.DrawBorder(e.Graphics, pnl.ClientRectangle, pnl.BackColor, ButtonBorderStyle.Solid)
@@ -187,21 +258,14 @@ Public Class Form1
 
             FlowLayoutPanel1.Visible = False
             Label5.Visible = False
+            Btn_RefreshList.Visible = False
         End If
 
     End Sub
     ''end - get process information
 
     '' Start - Send Keyinput stuff
-    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
-    Private Shared Function FindWindow(
-       ByVal lpClassName As String,
-       ByVal lpWindowName As String) As IntPtr
-    End Function
 
-    <DllImport("user32.dll")>
-    Private Shared Function SendMessage(hWnd As IntPtr, Msg As UInteger, wParam As Integer, lParam As Integer) As Integer
-    End Function
 
     Private Const WM_KEYDOWN As Integer = &H100
     Private Const WM_KEYUP As Integer = &H101
@@ -214,6 +278,16 @@ Public Class Form1
         'kbHook.HookKeyboard()
         Processes_Load()
         Rtb_InputLog.AppendText($"{Environment.NewLine}")
+        ' Configure the Hover-to-Focus background clock rate (100ms provides low latency/smooth response)
+        Tm_HoverFocus.Interval = 100
+    End Sub
+
+    Private Sub Form1_Close(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Closed
+        If TargetWindow_Hwnd = IntPtr.Zero Then
+        Else
+            ' Remove Always On Top
+            SetWindowPos(TargetWindow_Hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_SHOWWINDOW)
+        End If
     End Sub
 
     Private Sub kbHook_KeyDown(ByVal Key As System.Windows.Forms.Keys) Handles kbHook.KeyDown
@@ -250,6 +324,7 @@ Public Class Form1
 
         FlowLayoutPanel1.Visible = True
         Label5.Visible = True
+        Btn_RefreshList.Visible = True
     End Sub
 
     Private Sub Btn_RefreshList_Click(sender As Object, e As EventArgs) Handles Btn_RefreshList.Click
@@ -284,11 +359,81 @@ Public Class Form1
     Private Sub Btn_Settings_Click(sender As Object, e As EventArgs) Handles Btn_Settings.Click
         Settings.Show()
     End Sub
+    Public Sub SendKeyToTarget(ByVal key As Keys)
+        If TargetWindow_Hwnd <> IntPtr.Zero Then
+            ' Send KeyDown
+            SendMessage(TargetWindow_Hwnd, WM_KEYDOWN, key, 0)
+            ' Send KeyUp
+            SendMessage(TargetWindow_Hwnd, WM_KEYUP, key, 0)
+        End If
+    End Sub
+    Private Sub ChkBox_OnTop_CheckedChanged(sender As Object, e As EventArgs) Handles ChkBox_OnTop.CheckedChanged
+        ' Ensure we actually have a target window selected first
+        If TargetWindow_Hwnd = IntPtr.Zero Then
+            MessageBox.Show("Please select a target window first.", "No Target", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ' Uncheck the box so it doesn't get stuck in the wrong state
+            ChkBox_OnTop.Checked = False
+            Return
+        End If
+
+        If ChkBox_OnTop.Checked Then
+            ' Apply Always On Top
+            SetWindowPos(TargetWindow_Hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_SHOWWINDOW)
+        Else
+            ' Remove Always On Top
+            SetWindowPos(TargetWindow_Hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE Or SWP_SHOWWINDOW)
+        End If
+    End Sub
 
 
+    Private Sub TrackBar_Opacity_Scroll(sender As Object, e As EventArgs) Handles TrackBar_Opacity.Scroll
+        ' Handles Window Transparency adjustments via your new TrackBar control
+
+        If TargetWindow_Hwnd <> IntPtr.Zero Then
+            Dim currentStyle As Integer = GetWindowLong(TargetWindow_Hwnd, GWL_EXSTYLE)
+
+            ' Inject the layered window style attribute into the target window framework if missing
+            SetWindowLong(TargetWindow_Hwnd, GWL_EXSTYLE, currentStyle Or WS_EX_LAYERED)
+
+            ' Apply opacity transformation value (Value between 30 and 255)
+            SetLayeredWindowAttributes(TargetWindow_Hwnd, 0, CByte(TrackBar_Opacity.Value), LWA_ALPHA)
+        End If
+
+    End Sub
 
 
+    ' Toggles the Hover-to-Focus system timer loop state
+    Private Sub ChkBox_HoverFocus_CheckedChanged(sender As Object, e As EventArgs) Handles ChkBox_HoverFocus.CheckedChanged
+        Tm_HoverFocus.Enabled = ChkBox_HoverFocus.Checked
+    End Sub
 
+    ' Asynchronous background tracker matching screen coordinates with root window focuses
+    Private Sub Tm_HoverFocus_Tick(sender As Object, e As EventArgs) Handles Tm_HoverFocus.Tick
+        Dim mousePoint As Point
+
+        ' Fetch precise global coordinate positioning of the user's cursor pointer
+        If GetCursorPos(mousePoint) Then
+            Dim hWndUnderMouse As IntPtr = WindowFromPoint(mousePoint)
+
+            If hWndUnderMouse <> IntPtr.Zero Then
+                ' Ascend child items (buttons, textboxes) to isolate the primary parent container handle
+                Dim rootWindow As IntPtr = GetAncestor(hWndUnderMouse, GA_ROOT)
+
+                If rootWindow <> IntPtr.Zero Then
+                    Dim activeForegroundWindow As IntPtr = GetForegroundWindow()
+
+                    ' Transfer primary system desktop thread foreground focuses if discrepancies register
+                    If rootWindow <> activeForegroundWindow Then
+                        SetForegroundWindow(rootWindow)
+                    End If
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub Btn_ActionBar_Click(sender As Object, e As EventArgs) Handles Btn_ActionBar.Click
+        ActionBar.Show()
+    End Sub
 
 
 
